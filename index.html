@@ -1,0 +1,60 @@
+<!doctype html>
+<head>
+<title>booklet</title>
+<link rel="stylesheet" href="js/consoleApp.css">
+<script src="js/consoleApp.js"></script>
+<script>
+  const renderHeader = () => {
+    return (
+      '<div class="header">' +
+      '<button id="btn" onclick="go();">change number of pages</button>' +
+      '</div>'
+    );
+  };
+
+  const app = new ConsoleApp(renderHeader);
+  const series = 5;
+  const nDefault = 8;
+  let nn = nDefault;
+
+  // go!
+
+  const go = () => {
+    const s = prompt('number of pages in booklet', nn+'');
+    const n = parseInt(s);
+    if (!n) { return; }
+    nn = n;
+    process(n);
+  };
+
+	const process = (n) => {
+		const sheets = ((n + 3) / 4) | 0;
+		const sum = (sheets << 2) + 1;
+
+		const aa = [];
+		let i = 0, a = [], b = [];
+		for (; i < sheets; i++) {
+			const v = i * 2 + 1;
+			a.push(`${sum - v},${v}`);
+			b.push(`${v + 1},${sum - v - 1}`);
+
+			if (((i + 1) % series) === 0) {
+				aa.push(`#${(i - 3)}-${i + 1}`);
+				aa.push(a.join(','));
+				aa.push(b.join(','));
+				aa.push('');
+				a = [];
+				b = [];
+			}
+		}
+		if (a.length) {
+			aa.push(`#${i - a.length + 1}-${i}`);
+			aa.push(a.join(','));
+			aa.push(b.join(','));
+		}
+		app.log.putlines(aa);
+	};
+
+	process(nn);
+
+</script>
